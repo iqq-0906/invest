@@ -7,6 +7,9 @@ from tqdm import tqdm
 # import jax
 import numpy as np
 # from jax import random, jit
+from kan import *
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+print(device)
 import sklearn
 from sklearn.preprocessing import MinMaxScaler
 import itertools
@@ -205,14 +208,14 @@ class r_th(nn.Module):
 i=64
 metrics_df = pd.DataFrame()
 for l in range(1, 6):
-    pre_data=pd.read_csv(r'E:\Project\invest\Black-Litterman-With-ML-Views\data\BL_returnBL_rolling{}_{}.csv'.format(l,i))
+    pre_data=pd.read_csv(r'data\BL_returnBL_rolling{}_{}.csv'.format(l,i))
     df = pd.DataFrame()
     for j in range(0,64,i):
         print('{}-{}-{}'.format(i,l,j))
         if i in [5,10,15,20,30,64]:
             if j != 60:
                 pre_data_return=pre_data.iloc[j:j+i,:]
-                cov_data=pd.read_csv(r'E:\Project\invest\Black-Litterman-With-ML-Views\data\BL_cov_rolling{}_{}_{}.csv'.format(l,i,j))
+                cov_data=pd.read_csv(r'data\BL_cov_rolling{}_{}_{}.csv'.format(l,i,j))
 
                 del cov_data['Unnamed: 0']
                 covariance_matrix = torch.tensor(cov_data.values).float()
@@ -223,7 +226,7 @@ for l in range(1, 6):
                     tensor_name = torch.tensor(numpy_array, dtype=torch.float64).reshape(-1, ).float()
                     torch.set_printoptions(precision=6)
                     tensor_list.append(tensor_name)
-                kan = KAN([10,2,2,1], base_activation=nn.Identity)
+                kan  = KAN(width=[4,2,1,1], grid=3, k=3, seed=1, device=device)
                 model = r_th(kan)
                 model.train(tensor_list[0],tensor_list[1],tensor_list[2],tensor_list[3],tensor_list[4],tensor_list[5],
                 tensor_list[6],tensor_list[7],tensor_list[8],tensor_list[9],ones,covariance_matrix)
@@ -242,9 +245,7 @@ for l in range(1, 6):
                 df= pd.concat([df, df1], axis=0, ignore_index=True)
             if j==60:
                 pre_data_return = pre_data.iloc[j:j + i, :]
-                cov_data = pd.read_csv(
-                    r'E:\Project\invest\Black-Litterman-With-ML-Views\data\BL_cov_rolling{}_{}_{}.csv'.format(l, i,
-                                                                                                              j))
+                cov_data = pd.read_csv(r'data\BL_cov_rolling{}_{}_{}.csv'.format(l, i,j))
                 del cov_data['Unnamed: 0']
                 covariance_matrix = torch.tensor(cov_data.values).float()
                 ones = torch.ones(4)
@@ -254,7 +255,7 @@ for l in range(1, 6):
                     tensor_name = torch.tensor(numpy_array, dtype=torch.float64).reshape(-1, ).float()
                     torch.set_printoptions(precision=6)
                     tensor_list.append(tensor_name)
-                kan = KAN([10,2,2,1], base_activation=nn.Identity)
+                kan = KAN(width=[4,2,1,1], grid=3, k=3, seed=1, device=device)
                 model = r_th(kan)
                 model.train(tensor_list[0], tensor_list[1], tensor_list[2], tensor_list[3], tensor_list[4],
                             tensor_list[5],
@@ -277,9 +278,7 @@ for l in range(1, 6):
         if i in [40]:
             if j==0:
                 pre_data_return = pre_data.iloc[j:j + i, :]
-                cov_data = pd.read_csv(
-                    r'E:\Project\invest\Black-Litterman-With-ML-Views\data\BL_cov_rolling{}_{}_{}.csv'.format(l, i,
-                                                                                                              j))
+                cov_data = pd.read_csv(r'data\BL_cov_rolling{}_{}_{}.csv'.format(l, i, j))
                 del cov_data['Unnamed: 0']
                 covariance_matrix = torch.tensor(cov_data.values).float()
                 ones = torch.ones(i)
@@ -289,7 +288,7 @@ for l in range(1, 6):
                     tensor_name = torch.tensor(numpy_array, dtype=torch.float64).reshape(-1, ).float()
                     torch.set_printoptions(precision=6)
                     tensor_list.append(tensor_name)
-                kan = KAN([10,2,2,1], base_activation=nn.Identity)
+                kan =KAN(width=[4,2,1,1], grid=3, k=3, seed=1, device=device)
                 model = r_th(kan)
                 model.train(tensor_list[0], tensor_list[1], tensor_list[2], tensor_list[3], tensor_list[4], tensor_list[5],
                             tensor_list[6], tensor_list[7], tensor_list[8], tensor_list[9], ones, covariance_matrix)
@@ -310,8 +309,7 @@ for l in range(1, 6):
             else:
                 pre_data_return = pre_data.iloc[j:j + i, :]
                 cov_data = pd.read_csv(
-                    r'E:\Project\invest\Black-Litterman-With-ML-Views\data\BL_cov_rolling{}_{}_{}.csv'.format(l, i,
-                                                                                                              j))
+                    r'data\BL_cov_rolling{}_{}_{}.csv'.format(l, i, j))
                 del cov_data['Unnamed: 0']
                 covariance_matrix = torch.tensor(cov_data.values).float()
                 ones = torch.ones(24)
@@ -321,7 +319,7 @@ for l in range(1, 6):
                     tensor_name = torch.tensor(numpy_array, dtype=torch.float64).reshape(-1, ).float()
                     torch.set_printoptions(precision=6)
                     tensor_list.append(tensor_name)
-                kan = KAN([10,2,2,1], base_activation=nn.Identity)
+                kan = KAN(width=[4,2,1,1], grid=3, k=3, seed=1, device=device)
                 model = r_th(kan)
                 model.train(tensor_list[0], tensor_list[1], tensor_list[2], tensor_list[3], tensor_list[4],
                             tensor_list[5],
@@ -362,7 +360,7 @@ for g in range(1, 6):
     holding_period =g
     period_weights_df= compute_period_weights(period_weights_df, holding_period)
     period_weights_df =period_weights_df.to_numpy()
-    true_data = pd.read_csv(r'E:\Project\invest\Black-Litterman-With-ML-Views\data\stock_true_data_rolling{}_{}.csv'.format(g,i)).to_numpy()
+    true_data = pd.read_csv(r'data\stock_true_data_rolling{}_{}.csv'.format(g,i)).to_numpy()
     product_df =period_weights_df*true_data
     product_df= pd.DataFrame(product_df)
     row_sum = product_df.sum(axis=1)

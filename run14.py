@@ -201,14 +201,7 @@ class r_th(nn.Module):
                                      (loss1.detach().numpy(), loss3.detach().numpy(),
                                       loss5.detach().numpy()
                                       ))
-import os
 
-# 确保相对路径正确
-file_path = os.path.join('data', 'sample_data.csv')
-
-# 读取数据
-data = pd.read_csv(file_path)
-print(data.head())
 
 
 

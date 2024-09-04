@@ -114,11 +114,11 @@ class r_th(nn.Module):
             self.optimizer.zero_grad()
 
             # 计算各个损失
-            loss1 = self.residual_net1(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10,ones= ones)
-            loss2 = self.residual_net2(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10)
-            loss3 = self.residual_net3(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10)
-            loss4 = self.residual_net4(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10)
-            loss5 = self.residual_net5(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10)
+            loss1 = self.residual_net1(*xs,ones= ones)
+            loss2 = self.residual_net2(*xs)
+            loss3 = self.residual_net3(*xs)
+            loss4 = self.residual_net4(*xs)
+            loss5 = self.residual_net5(*xs)
             # if loss2.item() > 0 :
             #     continue
             #     # 跳过当前 epoch，重新训练

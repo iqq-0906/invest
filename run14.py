@@ -201,13 +201,21 @@ class r_th(nn.Module):
                                      (loss1.detach().numpy(), loss3.detach().numpy(),
                                       loss5.detach().numpy()
                                       ))
+import os
+
+# 确保相对路径正确
+file_path = os.path.join('data', 'sample_data.csv')
+
+# 读取数据
+data = pd.read_csv(file_path)
+print(data.head())
 
 
 
 i=64
 metrics_df = pd.DataFrame()
 for l in range(1, 6):
-    pre_data=pd.read_csv(r'data\BL_returnBL_rolling{}_{}.csv'.format(l,i))
+    pre_data=pd.read_csv(r'BL_returnBL_rolling{}_{}.csv'.format(l,i))
     df = pd.DataFrame()
     for j in range(0,64,i):
         print('{}-{}-{}'.format(i,l,j))

@@ -144,7 +144,7 @@ metrics_df = pd.DataFrame()
 for l in range(1, 6):
     pre_data=pd.read_csv('tly/BL_returnBL_rolling{}_{}.csv'.format(l,i))
     del pre_data['Unnamed: 0']
-    print(pre_data)
+    # print(pre_data)
     df = pd.DataFrame()
     for j in range(0,64,i):
         print('{}-{}-{}'.format(i,l,j))

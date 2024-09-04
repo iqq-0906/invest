@@ -293,7 +293,7 @@ for g in range(1, 6):
     holding_period =g
     period_weights_df= compute_period_weights(period_weights_df, holding_period)
     period_weights_df =period_weights_df.to_numpy()
-    true_data = pd.read_csv(r'data\stock_true_data_rolling{}_{}.csv'.format(g,i)).to_numpy()
+    true_data = pd.read_csv('iqq/stock_true_data_rolling{}_{}.csv'.format(g,i)).to_numpy()
     product_df =period_weights_df*true_data
     product_df= pd.DataFrame(product_df)
     row_sum = product_df.sum(axis=1)

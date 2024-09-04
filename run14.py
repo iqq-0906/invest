@@ -23,153 +23,83 @@ import pandas as pd
 # from Covariance_estimation.gerber import gerber_cov_stat1, gerber_cov_stat2,is_psd_def
 # from Covariance_estimation.ledoit import ledoit
 
-def set_seed(seed):
-    torch.manual_seed(seed)
-    np.random.seed(seed)
-    if torch.cuda.is_available():
-        torch.cuda.manual_seed(seed)
-        torch.cuda.manual_seed_all(seed)
 
-class r_th(nn.Module):
+
+
+
+
+  class r_th(nn.Module):
     def __init__(self, model):
         super(r_th, self).__init__()
-        # Network initialization and evaluation functions
         set_seed(10)
         self.model = model
+        self.device = next(model.parameters()).device  # Get the device of the model
+        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.1)  # Initialize optimizer
 
     def reshape(self, X):
-        reshaped_X = X.reshape(-1, )
-        return reshaped_X
-    def helper(self, x1,x2,x3,x4,x5,x6,x7,x8,x9,x10):
-        reshaped_x1 = self.reshape(x1)
-        reshaped_x2 = self.reshape(x2)
-        reshaped_x3 = self.reshape(x3)
-        reshaped_x4 = self.reshape(x4)
-        reshaped_x5 = self.reshape(x5)
-        reshaped_x6 = self.reshape(x6)
-        reshaped_x7 = self.reshape(x7)
-        reshaped_x8 = self.reshape(x8)
-        reshaped_x9 = self.reshape(x9)
-        reshaped_x10 = self.reshape(x10)
+        return X.reshape(-1, )
 
+    def helper(self, *xs):
+        reshaped_xs = [self.reshape(x) for x in xs]
+        stacked_tensor = torch.stack(reshaped_xs)
+        return stacked_tensor.permute(1, 0)
 
-        stacked_tensor = torch.stack([reshaped_x1, reshaped_x2, reshaped_x3, reshaped_x4, reshaped_x5,
-                                      reshaped_x6, reshaped_x7, reshaped_x8, reshaped_x9, reshaped_x10])
-        permuted_tensor = stacked_tensor.permute(1, 0)
-        return permuted_tensor
-    # Define DeepONet architecture
-    def operator_net(self,x1, x2, x3, x4, x5, x6, x7, x8, x9, x10):
-        y=self.helper(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10)
-        outputs = self.model(y)
-        return outputs
+    def operator_net(self, *xs):
+        y = self.helper(*xs)
+        return self.model(y)
 
-    # Define PDE residual
-    def residual_net(self,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10):
-        s=self.operator_net(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10)
-        s_x1 =jacrev(self.operator_net,argnums=0)(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10).sum(dim=0)
-        # s_x12 = torch.autograd.grad(s,x1,grad_outputs=torch.ones_like(s),retain_graph=True,create_graph=True)[0]
-        s_x2 =jacrev(self.operator_net, argnums=1)(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10).sum(dim=0)
-        s_x3 =jacrev(self.operator_net, argnums=2)(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10).sum(dim=0)
-        s_x4 =jacrev(self.operator_net, argnums=3)(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10).sum(dim=0)
-        s_x5 =jacrev(self.operator_net, argnums=4)(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10).sum(dim=0)
-        s_x6 = jacrev(self.operator_net, argnums=5)(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10).sum(dim=0)
-        s_x7 = jacrev(self.operator_net, argnums=6)(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10).sum(dim=0)
-        s_x8 = jacrev(self.operator_net, argnums=7)(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10).sum(dim=0)
-        s_x9 = jacrev(self.operator_net, argnums=8)(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10).sum(dim=0)
-        s_x10 = jacrev(self.operator_net, argnums=9)(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10).sum(dim=0)
+    def residual_net(self, *xs):
+        s = self.operator_net(*xs)
+        s_gradients = [jacrev(self.operator_net, argnums=i)(*xs).sum(dim=0) for i in range(len(xs))]
+        
+        # Apply ReLU to gradients
+        s_gradients = [torch.relu(grad) for grad in s_gradients]
 
-        s_x1[s_x1< 0] = 0
-        s_x2[s_x2 < 0] = 0
-        s_x3[s_x3 < 0] = 0
-        s_x4[s_x4 < 0] = 0
-        s_x5[s_x5 < 0] = 0
-        s_x6[s_x6< 0] = 0
-        s_x7[s_x7 < 0] = 0
-        s_x8[s_x8 < 0] = 0
-        s_x9[s_x9 < 0] = 0
-        s_x10[s_x10 < 0] = 0
+        return s_gradients
 
-        return s_x1, s_x2, s_x3, s_x4, s_x5, s_x6, s_x7, s_x8, s_x9, s_x10
+    def residual_net1(self, *xs, ones):
+        s_gradients = self.residual_net(*xs)
+        output = sum(s_gradients)
+        return torch.mean((output.flatten() - ones) ** 2)
 
+    def residual_net2(self, *xs):
+        r = self.operator_net(*xs)
+        return -torch.mean(r.flatten())
 
-    def residual_net1(self,x1, x2, x3, x4,  x5, x6, x7, x8, x9, x10,ones):
-        s_x1, s_x2, s_x3, s_x4, s_x5, s_x6, s_x7, s_x8, s_x9, s_x10=self.residual_net(x1,x2,x3,x4,x5,x6,x7,x8,x9,x10)
+    def residual_net3(self, *xs):
+        s = self.operator_net(*xs)
+        s_gradients = self.residual_net(*xs)
+        s1 = sum(g * x for g, x in zip(s_gradients, xs))
+        r_mean = torch.mean(s1.flatten())
+        th = self.residual_net42(*xs)
+        return 1.25 * th - r_mean
 
-        output = s_x1 + s_x2 + s_x3 + s_x4 + s_x5 + s_x6 + s_x7 + s_x8 + s_x9 + s_x10
-        res=torch.mean((output.flatten() -ones) ** 2)
-        return res
+    def residual_net42(self, *xs):
+        r = self.operator_net(*xs)
+        return torch.std(r.flatten())
 
-    def residual_net2(self, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10):
-        r = self.operator_net(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10)
-        r_mean = -torch.mean(r.flatten())
-        return r_mean
-
-    def residual_net3(self, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10):
-        r = self.operator_net(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10)
-        s_x1, s_x2, s_x3, s_x4, s_x5, s_x6, s_x7, s_x8, s_x9, s_x10 = self.residual_net(x1, x2, x3, x4, x5, x6, x7, x8,
-                                                                                        x9, x10)
-
-        s1 = s_x1 * x1 + s_x2 * x2 + s_x3 * x3 + s_x4 * x4 + s_x5 * x5 + s_x6 * x6 + s_x7 * x7 + s_x8 * x8 + s_x9 * x9 + s_x10 * x10
-        r_mean = torch.mean((s1.flatten()))
-        th = self.residual_net42(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10)
-        outputs=1.25*th-r_mean
-        return outputs
-
-    # def residual_net3(self, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, covariance_matrix):
-    #     s = self.operator_net(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10)
-    #     s_x1, s_x2, s_x3, s_x4, s_x5, s_x6, s_x7, s_x8, s_x9, s_x10 = self.residual_net(x1, x2, x3, x4, x5, x6, x7, x8,
-    #                                                                                     x9, x10)
-    #     s1 = s_x1 * x1 + s_x2 * x2 + s_x3 * x3 + s_x4 * x4 + s_x5 * x5 + s_x6 * x6 + s_x7 * x7 + s_x8 * x8 + s_x9 * x9 + s_x10 * x10
-    #     weights = self.helper(s_x1, s_x2, s_x3, s_x4, s_x5, s_x6, s_x7, s_x8, s_x9, s_x10)
-    #     portfolio_var = torch.matmul(torch.matmul(weights, covariance_matrix), weights.T)
-    #     portfolio_var = torch.diag(portfolio_var)
-    #     outputs = -(torch.mean(s.flatten() - 1.25 * portfolio_var))
-    #     return outputs
-
-    # def residual_net41(self, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10,covariance_matrix):
-    #     s_x1, s_x2, s_x3, s_x4, s_x5, s_x6, s_x7, s_x8, s_x9, s_x10=self.residual_net(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10)
-    #     weights=self.helper(s_x1,s_x2,s_x3,s_x4,s_x5,s_x6,s_x7,s_x8,s_x9,s_x10)
-    #     portfolio_var =torch.matmul(torch.matmul(weights,covariance_matrix), weights.T)
-    #     portfolio_var=torch.diag(portfolio_var)
-    #     # outputs = -torch.mean((portfolio_var.flatten()**2))
-    #     return outputs
-    def residual_net42(self, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10):
-        r = self.operator_net(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10)
-        outputs = torch.std((r.flatten()))
-        return outputs
-
-    def residual_net4(self, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10):
-        r = self.operator_net(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10)
+    def residual_net4(self, *xs):
+        r = self.operator_net(*xs)
         r_mean = torch.mean(r.flatten())
-        th = self.residual_net42(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10)
-        sp = -r_mean / th
-        return sp
+        th = self.residual_net42(*xs)
+        return -r_mean / th
 
-
-
-
-    def residual_net5(self, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10):
-        s = self.operator_net(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10)
-        s_x1, s_x2, s_x3, s_x4, s_x5, s_x6, s_x7, s_x8, s_x9, s_x10= self.residual_net(x1,x2,x3,x4,x5,x6,x7,x8,x9, x10)
-
-        s1=s_x1*x1+s_x2*x2+s_x3*x3+s_x4*x4+s_x5*x5+s_x6*x6+s_x7*x7+s_x8*x8+s_x9*x9+s_x10*x10
-        outputs =torch.mean((s1.flatten() - s.flatten())**2)
-        return outputs
+    def residual_net5(self, *xs):
+        s = self.operator_net(*xs)
+        s_gradients = self.residual_net(*xs)
+        s1 = sum(g * x for g, x in zip(s_gradients, xs))
+        return torch.mean((s1.flatten() - s.flatten()) ** 2)
 
     def calculate_cvar(self, r, alpha=0.05):
         var = torch.quantile(r, 1 - alpha)
         cvar = torch.mean(r[r >= var])
-        outputs = torch.mean((cvar.flatten()) ** 2)
+        return torch.mean((cvar.flatten()) ** 2)
 
-        return outputs
+    def residual_net_cvar(self, *xs, alpha):
+        r = self.operator_net(*xs)
+        return self.calculate_cvar(r, alpha)
 
-    def residual_net_cvar(self, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, alpha):
-        r = self.operator_net(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10)
-        cvar = self.calculate_cvar(r,alpha)
-        return cvar
-
-
-    def train(self,x1, x2, x3, x4, x5, x6, x7, x8, x9, x10,ones,covariance_matrix):
+    def train(self, *xs, ones, covariance_matrix=None):
         # self.optimizer = torch.optim.LBFGS(model.parameters(), lr=0.1, history_size=10, line_search_fn="strong_wolfe",
         #                   tolerance_grad=1e-32, tolerance_change=1e-32)
         self.optimizer= torch.optim.Adam(model.parameters(), lr=0.1)

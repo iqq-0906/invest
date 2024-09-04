@@ -215,7 +215,7 @@ for l in range(1, 6):
         if i in [5,10,15,20,30,64]:
             if j != 60:
                 pre_data_return=pre_data.iloc[j:j+i,:]
-                cov_data=pd.read_csv('data\BL_cov_rolling{}_{}_{}.csv'.format(l,i,j))
+                cov_data=pd.read_csv('data/BL_cov_rolling{}_{}_{}.csv'.format(l,i,j))
 
                 del cov_data['Unnamed: 0']
                 covariance_matrix = torch.tensor(cov_data.values).float()
@@ -245,7 +245,7 @@ for l in range(1, 6):
                 df= pd.concat([df, df1], axis=0, ignore_index=True)
             if j==60:
                 pre_data_return = pre_data.iloc[j:j + i, :]
-                cov_data = pd.read_csv(r'data\BL_cov_rolling{}_{}_{}.csv'.format(l, i,j))
+                cov_data = pd.read_csv('data/BL_cov_rolling{}_{}_{}.csv'.format(l, i,j))
                 del cov_data['Unnamed: 0']
                 covariance_matrix = torch.tensor(cov_data.values).float()
                 ones = torch.ones(4)
@@ -278,7 +278,7 @@ for l in range(1, 6):
         if i in [40]:
             if j==0:
                 pre_data_return = pre_data.iloc[j:j + i, :]
-                cov_data = pd.read_csv(r'data\BL_cov_rolling{}_{}_{}.csv'.format(l, i, j))
+                cov_data = pd.read_csv('data/BL_cov_rolling{}_{}_{}.csv'.format(l, i, j))
                 del cov_data['Unnamed: 0']
                 covariance_matrix = torch.tensor(cov_data.values).float()
                 ones = torch.ones(i)
@@ -308,8 +308,7 @@ for l in range(1, 6):
                 df = pd.concat([df, df1], axis=0, ignore_index=True)
             else:
                 pre_data_return = pre_data.iloc[j:j + i, :]
-                cov_data = pd.read_csv(
-                    r'data\BL_cov_rolling{}_{}_{}.csv'.format(l, i, j))
+                cov_data = pd.read_csv('data/BL_cov_rolling{}_{}_{}.csv'.format(l, i, j))
                 del cov_data['Unnamed: 0']
                 covariance_matrix = torch.tensor(cov_data.values).float()
                 ones = torch.ones(24)

@@ -132,8 +132,8 @@ class r_th(nn.Module):
 
             if _ % 1 == 0:
                 pbar.set_description("loss1: %.2e | loss3: %.2e| loss5: %.2e" %
-                                     (loss1.detach().numpy(), loss3.detach().numpy(),
-                                      loss5.detach().numpy()
+                                     (loss1.cpu().detach().numpy(), loss3.cpu().detach().numpy(),
+                                      loss5.cpu().detach().numpy()
                                       ))
 
 

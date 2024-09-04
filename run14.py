@@ -208,14 +208,14 @@ class r_th(nn.Module):
 i=64
 metrics_df = pd.DataFrame()
 for l in range(1, 6):
-    pre_data=pd.read_csv(r'data\BL_returnBL_rolling{}_{}.csv'.format(l,i))
+    pre_data=pd.read_csv('data\BL_returnBL_rolling{}_{}.csv'.format(l,i))
     df = pd.DataFrame()
     for j in range(0,64,i):
         print('{}-{}-{}'.format(i,l,j))
         if i in [5,10,15,20,30,64]:
             if j != 60:
                 pre_data_return=pre_data.iloc[j:j+i,:]
-                cov_data=pd.read_csv(r'data\BL_cov_rolling{}_{}_{}.csv'.format(l,i,j))
+                cov_data=pd.read_csv('data\BL_cov_rolling{}_{}_{}.csv'.format(l,i,j))
 
                 del cov_data['Unnamed: 0']
                 covariance_matrix = torch.tensor(cov_data.values).float()

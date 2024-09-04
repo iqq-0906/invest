@@ -27,8 +27,7 @@ import pandas as pd
 
 
 
-
-  class r_th(nn.Module):
+class r_th(nn.Module):
     def __init__(self, model):
         super(r_th, self).__init__()
         set_seed(10)

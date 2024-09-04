@@ -163,7 +163,7 @@ for l in range(1, 6):
                 kan  = KAN(width=[4,2,1,1], grid=3, k=3, seed=1, device=device)
                 model = r_th(kan)
                 model.train(tensor_list[0],tensor_list[1],tensor_list[2],tensor_list[3],tensor_list[4],tensor_list[5],
-                tensor_list[6],tensor_list[7],tensor_list[8],tensor_list[9],ones,covariance_matrix)
+                tensor_list[6],tensor_list[7],tensor_list[8],tensor_list[9],ones=ones,covariance_matrix=covariance_matrix)
                 proportion=model.residual_net(tensor_list[0],tensor_list[1],tensor_list[2],tensor_list[3],tensor_list[4],tensor_list[5],
                 tensor_list[6],tensor_list[7],tensor_list[8],tensor_list[9])
                 n=0
@@ -193,7 +193,7 @@ for l in range(1, 6):
                 model = r_th(kan)
                 model.train(tensor_list[0], tensor_list[1], tensor_list[2], tensor_list[3], tensor_list[4],
                             tensor_list[5],
-                            tensor_list[6], tensor_list[7], tensor_list[8], tensor_list[9], ones, covariance_matrix)
+                            tensor_list[6], tensor_list[7], tensor_list[8], tensor_list[9], ones=ones,covariance_matrix=covariance_matrix)
                 proportion = model.residual_net(tensor_list[0], tensor_list[1], tensor_list[2], tensor_list[3],
                                                 tensor_list[4], tensor_list[5],
                                                 tensor_list[6], tensor_list[7], tensor_list[8], tensor_list[9])
@@ -225,7 +225,7 @@ for l in range(1, 6):
                 kan =KAN(width=[4,2,1,1], grid=3, k=3, seed=1, device=device)
                 model = r_th(kan)
                 model.train(tensor_list[0], tensor_list[1], tensor_list[2], tensor_list[3], tensor_list[4], tensor_list[5],
-                            tensor_list[6], tensor_list[7], tensor_list[8], tensor_list[9], ones, covariance_matrix)
+                            tensor_list[6], tensor_list[7], tensor_list[8], tensor_list[9], ones=ones,covariance_matrix=covariance_matrix)
                 proportion = model.residual_net(tensor_list[0], tensor_list[1], tensor_list[2], tensor_list[3],
                                                 tensor_list[4], tensor_list[5],
                                                 tensor_list[6], tensor_list[7], tensor_list[8], tensor_list[9])
@@ -256,7 +256,7 @@ for l in range(1, 6):
                 model = r_th(kan)
                 model.train(tensor_list[0], tensor_list[1], tensor_list[2], tensor_list[3], tensor_list[4],
                             tensor_list[5],
-                            tensor_list[6], tensor_list[7], tensor_list[8], tensor_list[9], ones, covariance_matrix)
+                            tensor_list[6], tensor_list[7], tensor_list[8], tensor_list[9], ones=ones,covariance_matrix=covariance_matrix)
                 proportion = model.residual_net(tensor_list[0], tensor_list[1], tensor_list[2], tensor_list[3],
                                                 tensor_list[4], tensor_list[5],
                                                 tensor_list[6], tensor_list[7], tensor_list[8], tensor_list[9])

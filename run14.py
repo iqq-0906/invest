@@ -104,33 +104,29 @@ class r_th(nn.Module):
         return self.calculate_cvar(r, alpha)
 
     def train(self, *xs, ones, covariance_matrix=None):
-        self.optimizer = torch.optim.LBFGS(model.parameters(), lr=0.1, history_size=10, line_search_fn="strong_wolfe",
-                          tolerance_grad=1e-32, tolerance_change=1e-32)
-        # self.optimizer= torch.optim.Adam(model.parameters(), lr=0.001)
+        # self.optimizer = torch.optim.LBFGS(model.parameters(), lr=0.1, history_size=10, line_search_fn="strong_wolfe",
+        #                   tolerance_grad=1e-32, tolerance_change=1e-32)
+        self.optimizer= torch.optim.Adam(model.parameters(), lr=0.1)
 
 
         pbar = tqdm(range(50), desc='description')
         for _ in pbar:
-            def closure():
-                global loss1,loss3,loss5
-                self.optimizer.zero_grad()
-    
-                # 计算各个损失
-                loss1 = self.residual_net1(*xs,ones= ones)
-                loss2 = self.residual_net2(*xs)
-                loss3 = self.residual_net3(*xs)
-                loss4 = self.residual_net4(*xs)
-                loss5 = self.residual_net5(*xs)
-                # if loss2.item() > 0 :
-                #     continue
-                #     # 跳过当前 epoch，重新训练
-    
-                # 合并损失函数，权重根据实际情况调整
-                loss =1000*loss1  +100000*loss3+5*loss5
-                return loss
+
+            # 计算各个损失
+            loss1 = self.residual_net1(*xs,ones= ones)
+            loss2 = self.residual_net2(*xs)
+            loss3 = self.residual_net3(*xs)
+            loss4 = self.residual_net4(*xs)
+            loss5 = self.residual_net5(*xs)
+            # if loss2.item() > 0 :
+            #     continue
+            #     # 跳过当前 epoch，重新训练
+
+            # 合并损失函数，权重根据实际情况调整
+            loss =1000*loss1  +100000*loss3+5*loss5
 
             # 反向传播和优化
-            self.optimizer.step(closure)
+            self.optimizer.step()
 
             if _ % 1 == 0:
                 pbar.set_description("loss1: %.2e | loss3: %.2e| loss5: %.2e" %

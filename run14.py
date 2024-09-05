@@ -106,7 +106,7 @@ class r_th(nn.Module):
     def train(self, *xs, ones, covariance_matrix=None):
         # self.optimizer = torch.optim.LBFGS(model.parameters(), lr=0.1, history_size=10, line_search_fn="strong_wolfe",
         #                   tolerance_grad=1e-32, tolerance_change=1e-32)
-        self.optimizer= torch.optim.Adam(model.parameters(), lr=0.01)
+        self.optimizer= torch.optim.Adam(model.parameters(), lr=0.1)
 
 
         pbar = tqdm(range(30), desc='description')
@@ -124,7 +124,7 @@ class r_th(nn.Module):
             #     # 跳过当前 epoch，重新训练
 
             # 合并损失函数，权重根据实际情况调整
-            loss =1000*loss1  +loss3+10*loss5
+            loss =100*loss1  +loss3+10*loss5
 
             # 反向传播和优化
             loss.backward()
@@ -162,7 +162,7 @@ for l in range(1, 6):
                     tensor_name = torch.tensor(numpy_array, dtype=torch.float64).reshape(-1, ).float().to(device)
                     torch.set_printoptions(precision=6)
                     tensor_list.append(tensor_name)
-                kan  = KAN(width=[10,2,1,1], grid=3, k=3, seed=1, device=device)
+                kan  = KAN(width=[10,2,2,2,1], grid=3, k=3, seed=1, device=device)
                 model = r_th(kan)
                 model.train(tensor_list[0],tensor_list[1],tensor_list[2],tensor_list[3],tensor_list[4],tensor_list[5],
                 tensor_list[6],tensor_list[7],tensor_list[8],tensor_list[9],ones=ones,covariance_matrix=covariance_matrix)
@@ -191,7 +191,7 @@ for l in range(1, 6):
                     tensor_name = torch.tensor(numpy_array, dtype=torch.float64).reshape(-1, ).float().to(device)
                     torch.set_printoptions(precision=6)
                     tensor_list.append(tensor_name)
-                kan = KAN(width=[10,2,1,1], grid=3, k=3, seed=1, device=device)
+                kan = KAN(width=[10,2,2,2,1], grid=3, k=3, seed=1, device=device)
                 model = r_th(kan)
                 model.train(tensor_list[0], tensor_list[1], tensor_list[2], tensor_list[3], tensor_list[4],
                             tensor_list[5],
@@ -224,7 +224,7 @@ for l in range(1, 6):
                     tensor_name = torch.tensor(numpy_array, dtype=torch.float64).reshape(-1, ).float().to(device)
                     torch.set_printoptions(precision=6)
                     tensor_list.append(tensor_name)
-                kan =KAN(width=[10,2,1,1], grid=3, k=3, seed=1, device=device)
+                kan =KAN(width=[10,2,2,2,1], grid=3, k=3, seed=1, device=device)
                 model = r_th(kan)
                 model.train(tensor_list[0], tensor_list[1], tensor_list[2], tensor_list[3], tensor_list[4], tensor_list[5],
                             tensor_list[6], tensor_list[7], tensor_list[8], tensor_list[9], ones=ones,covariance_matrix=covariance_matrix)
@@ -254,7 +254,7 @@ for l in range(1, 6):
                     tensor_name = torch.tensor(numpy_array, dtype=torch.float64).reshape(-1, ).float().to(device)
                     torch.set_printoptions(precision=6)
                     tensor_list.append(tensor_name)
-                kan = KAN(width=[10,2,1,1], grid=3, k=3, seed=1, device=device)
+                kan = KAN(width=[10,2,2,2,1], grid=3, k=3, seed=1, device=device)
                 model = r_th(kan)
                 model.train(tensor_list[0], tensor_list[1], tensor_list[2], tensor_list[3], tensor_list[4],
                             tensor_list[5],

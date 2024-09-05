@@ -109,7 +109,7 @@ class r_th(nn.Module):
         self.optimizer= torch.optim.Adam(model.parameters(), lr=0.1)
 
 
-        pbar = tqdm(range(50), desc='description')
+        pbar = tqdm(range(30), desc='description')
         for _ in pbar:
 
             # 计算各个损失
@@ -123,7 +123,7 @@ class r_th(nn.Module):
             #     # 跳过当前 epoch，重新训练
 
             # 合并损失函数，权重根据实际情况调整
-            loss =1000000*loss1+loss3+loss5
+            loss =loss1+loss3+10*loss5
 
             # 反向传播和优化
             self.optimizer.step()

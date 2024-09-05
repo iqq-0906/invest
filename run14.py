@@ -38,7 +38,7 @@ class r_th(nn.Module):
         set_seed(905)
         self.model = model
         self.device = next(model.parameters()).device  # Get the device of the model
-        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.1)  # Initialize optimizer
+        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.01)  # Initialize optimizer
 
     def reshape(self, X):
         return X.reshape(-1, )

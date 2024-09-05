@@ -130,7 +130,6 @@ class r_th(nn.Module):
                 return loss
 
             # 反向传播和优化
-            loss.backward()
             self.optimizer.step(closure)
 
             if _ % 1 == 0:

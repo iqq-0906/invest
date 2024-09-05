@@ -35,7 +35,7 @@ def set_seed(seed):
 class r_th(nn.Module):
     def __init__(self, model):
         super(r_th, self).__init__()
-        set_seed(906)
+        # set_seed(906)
         self.model = model
         self.device = next(model.parameters()).device  # Get the device of the model
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.01)  # Initialize optimizer
@@ -160,7 +160,7 @@ for l in range(1, 6):
                     tensor_name = torch.tensor(numpy_array, dtype=torch.float64).reshape(-1, ).float().to(device)
                     torch.set_printoptions(precision=6)
                     tensor_list.append(tensor_name)
-                kan  = KAN(width=[10,2,2,1], grid=3, k=3, seed=1, device=device)
+                kan  = KAN(width=[10,2,2,1], grid=3, k=3, seed=42, device=device)
                 model = r_th(kan)
                 model.train(tensor_list[0],tensor_list[1],tensor_list[2],tensor_list[3],tensor_list[4],tensor_list[5],
                 tensor_list[6],tensor_list[7],tensor_list[8],tensor_list[9],ones=ones,covariance_matrix=covariance_matrix)
@@ -189,7 +189,7 @@ for l in range(1, 6):
                     tensor_name = torch.tensor(numpy_array, dtype=torch.float64).reshape(-1, ).float().to(device)
                     torch.set_printoptions(precision=6)
                     tensor_list.append(tensor_name)
-                kan = KAN(width=[10,2,2,1], grid=3, k=3, seed=1, device=device)
+                kan = KAN(width=[10,2,2,1], grid=3, k=3, seed=42, device=device)
                 model = r_th(kan)
                 model.train(tensor_list[0], tensor_list[1], tensor_list[2], tensor_list[3], tensor_list[4],
                             tensor_list[5],
@@ -222,7 +222,7 @@ for l in range(1, 6):
                     tensor_name = torch.tensor(numpy_array, dtype=torch.float64).reshape(-1, ).float().to(device)
                     torch.set_printoptions(precision=6)
                     tensor_list.append(tensor_name)
-                kan =KAN(width=[10,2,2,1], grid=3, k=3, seed=1, device=device)
+                kan =KAN(width=[10,2,2,1], grid=3, k=3, seed=42, device=device)
                 model = r_th(kan)
                 model.train(tensor_list[0], tensor_list[1], tensor_list[2], tensor_list[3], tensor_list[4], tensor_list[5],
                             tensor_list[6], tensor_list[7], tensor_list[8], tensor_list[9], ones=ones,covariance_matrix=covariance_matrix)

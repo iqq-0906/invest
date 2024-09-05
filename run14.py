@@ -104,9 +104,9 @@ class r_th(nn.Module):
         return self.calculate_cvar(r, alpha)
 
     def train(self, *xs, ones, covariance_matrix=None):
-        self.optimizer = torch.optim.LBFGS(model.parameters(), lr=0.1, history_size=10, line_search_fn="strong_wolfe",
-                          tolerance_grad=1e-32, tolerance_change=1e-32)
-        # self.optimizer= torch.optim.Adam(model.parameters(), lr=0.1)
+        # self.optimizer = torch.optim.LBFGS(model.parameters(), lr=0.1, history_size=10, line_search_fn="strong_wolfe",
+        #                   tolerance_grad=1e-32, tolerance_change=1e-32)
+        self.optimizer= torch.optim.Adam(model.parameters(), lr=0.1)
 
 
         pbar = tqdm(range(200), desc='description')

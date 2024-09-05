@@ -162,7 +162,7 @@ for l in range(1, 6):
                     tensor_name = torch.tensor(numpy_array, dtype=torch.float64).reshape(-1, ).float().to(device)
                     torch.set_printoptions(precision=6)
                     tensor_list.append(tensor_name)
-                kan  = KAN(width=[10,2,2,2,1], grid=3, k=3, seed=1, device=device)
+                kan  = KAN(width=[10,2,2,1], grid=3, k=3, seed=1, device=device)
                 model = r_th(kan)
                 model.train(tensor_list[0],tensor_list[1],tensor_list[2],tensor_list[3],tensor_list[4],tensor_list[5],
                 tensor_list[6],tensor_list[7],tensor_list[8],tensor_list[9],ones=ones,covariance_matrix=covariance_matrix)
@@ -191,7 +191,7 @@ for l in range(1, 6):
                     tensor_name = torch.tensor(numpy_array, dtype=torch.float64).reshape(-1, ).float().to(device)
                     torch.set_printoptions(precision=6)
                     tensor_list.append(tensor_name)
-                kan = KAN(width=[10,2,2,2,1], grid=3, k=3, seed=1, device=device)
+                kan = KAN(width=[10,2,2,1], grid=3, k=3, seed=1, device=device)
                 model = r_th(kan)
                 model.train(tensor_list[0], tensor_list[1], tensor_list[2], tensor_list[3], tensor_list[4],
                             tensor_list[5],
@@ -224,7 +224,7 @@ for l in range(1, 6):
                     tensor_name = torch.tensor(numpy_array, dtype=torch.float64).reshape(-1, ).float().to(device)
                     torch.set_printoptions(precision=6)
                     tensor_list.append(tensor_name)
-                kan =KAN(width=[10,2,2,2,1], grid=3, k=3, seed=1, device=device)
+                kan =KAN(width=[10,2,2,1], grid=3, k=3, seed=1, device=device)
                 model = r_th(kan)
                 model.train(tensor_list[0], tensor_list[1], tensor_list[2], tensor_list[3], tensor_list[4], tensor_list[5],
                             tensor_list[6], tensor_list[7], tensor_list[8], tensor_list[9], ones=ones,covariance_matrix=covariance_matrix)
@@ -254,7 +254,7 @@ for l in range(1, 6):
                     tensor_name = torch.tensor(numpy_array, dtype=torch.float64).reshape(-1, ).float().to(device)
                     torch.set_printoptions(precision=6)
                     tensor_list.append(tensor_name)
-                kan = KAN(width=[10,2,2,2,1], grid=3, k=3, seed=1, device=device)
+                kan = KAN(width=[10,2,2,1], grid=3, k=3, seed=1, device=device)
                 model = r_th(kan)
                 model.train(tensor_list[0], tensor_list[1], tensor_list[2], tensor_list[3], tensor_list[4],
                             tensor_list[5],

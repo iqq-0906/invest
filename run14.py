@@ -74,7 +74,7 @@ class r_th(nn.Module):
         s = self.operator_net(*xs)
         s_gradients = self.residual_net(*xs)
         s1 = sum(g * x for g, x in zip(s_gradients, xs))
-        r_mean = torch.mean(s1.flatten())
+        r_mean = torch.mean(s.flatten())
         th = self.residual_net42(*xs)
         return 1.25 * th - r_mean
 
@@ -123,7 +123,7 @@ class r_th(nn.Module):
             #     # 跳过当前 epoch，重新训练
 
             # 合并损失函数，权重根据实际情况调整
-            loss =1000*loss1  +10000000*loss3+loss5
+            loss =loss1+loss3+loss5
 
             # 反向传播和优化
             self.optimizer.step()

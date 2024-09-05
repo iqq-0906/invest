@@ -111,24 +111,27 @@ class r_th(nn.Module):
 
         pbar = tqdm(range(200), desc='description')
         for _ in pbar:
-            self.optimizer.zero_grad()
-
-            # 计算各个损失
-            loss1 = self.residual_net1(*xs,ones= ones)
-            loss2 = self.residual_net2(*xs)
-            loss3 = self.residual_net3(*xs)
-            loss4 = self.residual_net4(*xs)
-            loss5 = self.residual_net5(*xs)
-            # if loss2.item() > 0 :
-            #     continue
-            #     # 跳过当前 epoch，重新训练
-
-            # 合并损失函数，权重根据实际情况调整
-            loss =100*loss1  +loss3+5*loss5
+            def closure():
+                global pde_loss, bc_loss
+                self.optimizer.zero_grad()
+    
+                # 计算各个损失
+                loss1 = self.residual_net1(*xs,ones= ones)
+                loss2 = self.residual_net2(*xs)
+                loss3 = self.residual_net3(*xs)
+                loss4 = self.residual_net4(*xs)
+                loss5 = self.residual_net5(*xs)
+                # if loss2.item() > 0 :
+                #     continue
+                #     # 跳过当前 epoch，重新训练
+    
+                # 合并损失函数，权重根据实际情况调整
+                loss =100*loss1  +loss3+5*loss5
+                return loss
 
             # 反向传播和优化
             loss.backward()
-            self.optimizer.step()
+            self.optimizer.step(closure)
 
             if _ % 1 == 0:
                 pbar.set_description("loss1: %.2e | loss3: %.2e| loss5: %.2e" %

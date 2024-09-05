@@ -35,7 +35,7 @@ def set_seed(seed):
 class r_th(nn.Module):
     def __init__(self, model):
         super(r_th, self).__init__()
-        set_seed(10)
+        set_seed(20)
         self.model = model
         self.device = next(model.parameters()).device  # Get the device of the model
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=0.1)  # Initialize optimizer

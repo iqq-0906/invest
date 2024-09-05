@@ -247,11 +247,11 @@ for l in range(1, 6):
                 cov_data = pd.read_csv('data/BL_cov_rolling{}_{}_{}.csv'.format(l, i, j)).to(device)
                 del cov_data['Unnamed: 0']
                 covariance_matrix = torch.tensor(cov_data.values).float().to(device)
-                ones = torch.ones(24)
+                ones = torch.ones(24).to(device)
                 tensor_list = []
                 for m in range(10):
                     numpy_array = pre_data_return.iloc[:, m].to_numpy(dtype=np.float64)
-                    tensor_name = torch.tensor(numpy_array, dtype=torch.float64).reshape(-1, ).float()
+                    tensor_name = torch.tensor(numpy_array, dtype=torch.float64).reshape(-1, ).float().to(device)
                     torch.set_printoptions(precision=6)
                     tensor_list.append(tensor_name)
                 kan = KAN(width=[4,2,1,1], grid=3, k=3, seed=1, device=device)

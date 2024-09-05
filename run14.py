@@ -109,7 +109,7 @@ class r_th(nn.Module):
         self.optimizer= torch.optim.Adam(model.parameters(), lr=0.1)
 
 
-        pbar = tqdm(range(200), desc='description')
+        pbar = tqdm(range(50), desc='description')
         for _ in pbar:
             def closure():
                 global pde_loss, bc_loss

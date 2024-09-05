@@ -104,9 +104,9 @@ class r_th(nn.Module):
         return self.calculate_cvar(r, alpha)
 
     def train(self, *xs, ones, covariance_matrix=None):
-        # self.optimizer = torch.optim.LBFGS(model.parameters(), lr=0.1, history_size=10, line_search_fn="strong_wolfe",
-        #                   tolerance_grad=1e-32, tolerance_change=1e-32)
-        self.optimizer= torch.optim.Adam(model.parameters(), lr=0.1)
+        self.optimizer = torch.optim.LBFGS(model.parameters(), lr=0.1, history_size=10, line_search_fn="strong_wolfe",
+                          tolerance_grad=1e-32, tolerance_change=1e-32)
+        # self.optimizer= torch.optim.Adam(model.parameters(), lr=0.1)
 
 
         pbar = tqdm(range(200), desc='description')
@@ -124,7 +124,7 @@ class r_th(nn.Module):
             #     # 跳过当前 epoch，重新训练
 
             # 合并损失函数，权重根据实际情况调整
-            loss =100*loss1  +loss3+loss5
+            loss =100*loss1  +loss3+5*loss5
 
             # 反向传播和优化
             loss.backward()

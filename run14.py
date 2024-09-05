@@ -112,7 +112,7 @@ class r_th(nn.Module):
         pbar = tqdm(range(50), desc='description')
         for _ in pbar:
             def closure():
-                global pde_loss, bc_loss
+                global loss1,loss3,loss5
                 self.optimizer.zero_grad()
     
                 # 计算各个损失

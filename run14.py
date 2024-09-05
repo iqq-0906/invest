@@ -126,7 +126,7 @@ class r_th(nn.Module):
                 #     # 跳过当前 epoch，重新训练
     
                 # 合并损失函数，权重根据实际情况调整
-                loss =100000000000000*loss1  +loss3+5*loss5
+                loss =100000000000000*loss1  +0.01*loss3+5*loss5
                 return loss
 
             # 反向传播和优化
